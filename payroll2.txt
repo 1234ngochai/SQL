@@ -1,0 +1,515 @@
+SQL> 
+SQL> SELECT
+  2      empname,
+  3      empjob,
+  4      empmsal,
+  5      empmsal * 12       AS "anual sal",
+  6      empmsal * 12 * 1.1 AS "anual sal increase"
+  7  FROM
+  8      payroll.employee
+  9  ORDER BY
+ 10      empno;
+
+EMPNAME  EMPJOB      EMPMSAL  anual sal anual sal increase
+-------- -------- ---------- ---------- ------------------
+SMITH    TRAINER         800       9600              10560
+ALLEN    SALESREP       1600      19200              21120
+WARD     SALESREP       1250      15000              16500
+JONES    MANAGER        2975      35700              39270
+MARTIN   SALESREP       1250      15000              16500
+BLAKE    MANAGER        2850      34200              37620
+CLARK    MANAGER        2450      29400              32340
+SCOTT    TRAINER        3000      36000              39600
+KING     DIRECTOR       5000      60000              66000
+TURNER   SALESREP       1500      18000              19800
+ADAMS    TRAINER        1100      13200              14520
+
+EMPNAME  EMPJOB      EMPMSAL  anual sal anual sal increase
+-------- -------- ---------- ---------- ------------------
+JONES    ADMIN           800       9600              10560
+FORD     TRAINER        3000      36000              39600
+MILLER   ADMIN          1300      15600              17160
+
+14 rows selected. 
+
+SQL> 
+SQL> --2. Display the name of all employees, their birthdate and their age in years. Order the output by
+SQL> --birthdate, within birthdate order the output by name.
+SQL> SELECT
+  2      empname,
+  3      empbdate,
+  4      to_char(empbdate, 'dd-mm-yyyy')               AS "birhtday",
+  5      floor(months_between(sysdate, empbdate) / 12) AS "age"
+  6  FROM
+  7      payroll.employee
+  8  ORDER BY
+  9      empname;
+
+EMPNAME  EMPBDATE  birhtday          age
+-------- --------- ---------- ----------
+ADAMS    30-DEC-83 30-12-1983         38
+ALLEN    20-FEB-78 20-02-1978         44
+BLAKE    01-NOV-80 01-11-1980         42
+CLARK    09-JUN-82 09-06-1982         40
+FORD     13-FEB-76 13-02-1976         46
+JONES    02-APR-84 02-04-1984         38
+JONES    03-DEC-86 03-12-1986         35
+KING     17-NOV-69 17-11-1969         52
+MARTIN   28-SEP-73 28-09-1973         49
+MILLER   23-JAN-79 23-01-1979         43
+SCOTT    26-NOV-76 26-11-1976         45
+
+EMPNAME  EMPBDATE  birhtday          age
+-------- --------- ---------- ----------
+SMITH    17-DEC-82 17-12-1982         39
+TURNER   28-SEP-85 28-09-1985         37
+WARD     22-FEB-79 22-02-1979         43
+
+14 rows selected. 
+
+SQL> 
+SQL> --3. Display for all employees, their number, name, job, monthly salary, commission (which is paid
+SQL> --monthly) and their current annual salary (including commission). Order the output by employee
+SQL> --number.
+SQL> SELECT
+  2      *
+  3  FROM
+  4      payroll.employee;
+
+     EMPNO EMPNAME  EMPIN EMPJOB   EMPBDATE     EMPMSAL    EMPCOMM     DEPTNO      MGRNO
+---------- -------- ----- -------- --------- ---------- ---------- ---------- ----------
+      7839 KING     CC    DIRECTOR 17-NOV-69       5000                    10           
+      7566 JONES    JM    MANAGER  02-APR-84       2975                    20       7839
+      7902 FORD     MG    TRAINER  13-FEB-76       3000                    20       7566
+      7369 SMITH    N     TRAINER  17-DEC-82        800                    20       7902
+      7698 BLAKE    R     MANAGER  01-NOV-80       2850                    30       7839
+      7499 ALLEN    JAM   SALESREP 20-FEB-78       1600        300         30       7698
+      7521 WARD     TF    SALESREP 22-FEB-79       1250        500         30       7698
+      7654 MARTIN   P     SALESREP 28-SEP-73       1250       1400         30       7698
+      7782 CLARK    AB    MANAGER  09-JUN-82       2450                    10       7839
+      7788 SCOTT    SCJ   TRAINER  26-NOV-76       3000                    20       7566
+      7844 TURNER   JJ    SALESREP 28-SEP-85       1500          0         30       7698
+
+     EMPNO EMPNAME  EMPIN EMPJOB   EMPBDATE     EMPMSAL    EMPCOMM     DEPTNO      MGRNO
+---------- -------- ----- -------- --------- ---------- ---------- ---------- ----------
+      7876 ADAMS    AA    TRAINER  30-DEC-83       1100                    20       7788
+      7900 JONES    R     ADMIN    03-DEC-86        800                    30       7698
+      7934 MILLER   TJA   ADMIN    23-JAN-79       1300                    10       7782
+
+14 rows selected. 
+
+SQL> 
+SQL> SELECT
+  2      empno,
+  3      empname,
+  4      empjob,
+  5      empmsal,
+  6      empcomm,
+  7      ( empmsal + nvl(empcomm, 0) ) * 12 AS "annual sallary"
+  8  FROM
+  9      payroll.employee
+ 10  ORDER BY
+ 11      empno;
+
+     EMPNO EMPNAME  EMPJOB      EMPMSAL    EMPCOMM annual sallary
+---------- -------- -------- ---------- ---------- --------------
+      7369 SMITH    TRAINER         800                      9600
+      7499 ALLEN    SALESREP       1600        300          22800
+      7521 WARD     SALESREP       1250        500          21000
+      7566 JONES    MANAGER        2975                     35700
+      7654 MARTIN   SALESREP       1250       1400          31800
+      7698 BLAKE    MANAGER        2850                     34200
+      7782 CLARK    MANAGER        2450                     29400
+      7788 SCOTT    TRAINER        3000                     36000
+      7839 KING     DIRECTOR       5000                     60000
+      7844 TURNER   SALESREP       1500          0          18000
+      7876 ADAMS    TRAINER        1100                     13200
+
+     EMPNO EMPNAME  EMPJOB      EMPMSAL    EMPCOMM annual sallary
+---------- -------- -------- ---------- ---------- --------------
+      7900 JONES    ADMIN           800                      9600
+      7902 FORD     TRAINER        3000                     36000
+      7934 MILLER   ADMIN          1300                     15600
+
+14 rows selected. 
+
+SQL> --5. Display the name of all employees, their birthdate and their age in months. Order the output by
+SQL> --age in months (with the oldest employee first), within age in months order the output by name. The
+SQL> --age in months must be shown with one decimal point and right aligned.
+SQL> SELECT
+  2      empname,
+  3      to_char(empbdate, 'mm-dd-yyyy'),
+  4      lpad(to_char(months_between(sysdate, empbdate),'9990.0'),100)
+  5  FROM
+  6      payroll.employee;
+
+EMPNAME  TO_CHAR(EM LPAD(TO_CHAR(MONTHS_BETWEEN(SYSDATE,EMPBDATE),'9990.0'),100)                                        
+-------- ---------- ----------------------------------------------------------------------------------------------------
+KING     11-17-1969                                                                                                635.8
+JONES    04-02-1984                                                                                                463.3
+FORD     02-13-1976                                                                                                561.0
+SMITH    12-17-1982                                                                                                478.8
+BLAKE    11-01-1980                                                                                                504.4
+ALLEN    02-20-1978                                                                                                536.7
+WARD     02-22-1979                                                                                                524.7
+MARTIN   09-28-1973                                                                                                589.5
+CLARK    06-09-1982                                                                                                485.1
+SCOTT    11-26-1976                                                                                                551.6
+TURNER   09-28-1985                                                                                                445.5
+
+EMPNAME  TO_CHAR(EM LPAD(TO_CHAR(MONTHS_BETWEEN(SYSDATE,EMPBDATE),'9990.0'),100)                                        
+-------- ---------- ----------------------------------------------------------------------------------------------------
+ADAMS    12-30-1983                                                                                                466.4
+JONES    12-03-1986                                                                                                431.3
+MILLER   01-23-1979                                                                                                525.6
+
+14 rows selected. 
+
+SQL> --6. Display the employees who were born in February. Order the output by employee name.
+SQL> select * from payroll.employee e
+  2  where extract(month from empbdate) = 2
+  3  order by 
+  4  empname;
+
+     EMPNO EMPNAME  EMPIN EMPJOB   EMPBDATE     EMPMSAL    EMPCOMM     DEPTNO      MGRNO
+---------- -------- ----- -------- --------- ---------- ---------- ---------- ----------
+      7499 ALLEN    JAM   SALESREP 20-FEB-78       1600        300         30       7698
+      7902 FORD     MG    TRAINER  13-FEB-76       3000                    20       7566
+      7521 WARD     TF    SALESREP 22-FEB-79       1250        500         30       7698
+
+SQL> --7. Display the employee name, salary and commission (using the GREATEST function) for those
+SQL> --employees who earn more commission than their monthly salary. Order the output by employee
+SQL> --name and within name by monthly take home pay (salary plus commission).
+SQL> SELECT
+  2      empname,
+  3      empmsal,
+  4      empcomm
+  5  FROM
+  6      payroll.employee
+  7  WHERE
+  8      greatest(empmsal, empcomm) = empcomm;
+
+EMPNAME     EMPMSAL    EMPCOMM
+-------- ---------- ----------
+MARTIN         1250       1400
+
+SQL> --8. Display the name of all employees and their birthdate in the following format: EMPLOYEE N.
+SQL> --Smith was born on FRIDAY the 17 of DECEMBER , 1982. Order the output by employee name.
+SQL> SELECT
+  2      'EMPLOYEE '
+  3      || empinit
+  4      || '. '
+  5      || initcap(empname)
+  6      || ' was born on '
+  7      || rtrim(to_char(empbdate, 'DAY'))
+  8      || ' the '
+  9      || EXTRACT(DAY FROM empbdate)
+ 10      || ' of '
+ 11      || rtrim(to_char(empbdate, 'MONTH'))
+ 12      || ' , '
+ 13      || EXTRACT(YEAR FROM empbdate)
+ 14  FROM
+ 15      payroll.employee;
+
+'EMPLOYEE'||EMPINIT||'.'||INITCAP(EMPNAME)||'WASBORNON'||RTRIM(TO_CHAR(EMPBDATE,'DAY'))||'THE'||EXTRACT(DAYFROMEMPBDATE)||'OF'||RTRIM(TO_CHAR(EMPBDATE,'MONTH'))||','||EXTRACT(YEARFROMEMPBDATE)         
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+EMPLOYEE CC. King was born on MONDAY the 17 of NOVEMBER , 1969
+EMPLOYEE JM. Jones was born on MONDAY the 2 of APRIL , 1984
+EMPLOYEE MG. Ford was born on FRIDAY the 13 of FEBRUARY , 1976
+EMPLOYEE N. Smith was born on FRIDAY the 17 of DECEMBER , 1982
+EMPLOYEE R. Blake was born on SATURDAY the 1 of NOVEMBER , 1980
+EMPLOYEE JAM. Allen was born on MONDAY the 20 of FEBRUARY , 1978
+EMPLOYEE TF. Ward was born on THURSDAY the 22 of FEBRUARY , 1979
+EMPLOYEE P. Martin was born on FRIDAY the 28 of SEPTEMBER , 1973
+EMPLOYEE AB. Clark was born on WEDNESDAY the 9 of JUNE , 1982
+EMPLOYEE SCJ. Scott was born on FRIDAY the 26 of NOVEMBER , 1976
+EMPLOYEE JJ. Turner was born on SATURDAY the 28 of SEPTEMBER , 1985
+
+'EMPLOYEE'||EMPINIT||'.'||INITCAP(EMPNAME)||'WASBORNON'||RTRIM(TO_CHAR(EMPBDATE,'DAY'))||'THE'||EXTRACT(DAYFROMEMPBDATE)||'OF'||RTRIM(TO_CHAR(EMPBDATE,'MONTH'))||','||EXTRACT(YEARFROMEMPBDATE)         
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+EMPLOYEE AA. Adams was born on FRIDAY the 30 of DECEMBER , 1983
+EMPLOYEE R. Jones was born on WEDNESDAY the 3 of DECEMBER , 1986
+EMPLOYEE TJA. Miller was born on TUESDAY the 23 of JANUARY , 1979
+
+14 rows selected. 
+
+SQL> --9. Display the name of the employees who have registered for a course and the number of times
+SQL> --they have registered. Order the output by employee number.
+SQL> select empname, count(crscode) from payroll.employee e
+  2  join payroll.registration r on e.empno = r.empno
+  3  group by e.empname,e.empno
+  4  order by e.empno
+  5  ;
+
+EMPNAME  COUNT(CRSCODE)
+-------- --------------
+ALLEN                 4
+WARD                  1
+JONES                 2
+BLAKE                 3
+CLARK                 1
+SCOTT                 3
+KING                  2
+TURNER                1
+ADAMS                 3
+JONES                 2
+FORD                  3
+
+EMPNAME  COUNT(CRSCODE)
+-------- --------------
+MILLER                1
+
+12 rows selected. 
+
+SQL> --10. Who is the oldest employee? Show the employee number, name and date of birth. Order the
+SQL> --output by employee number.
+SQL> select empno,empname,empbdate from payroll.employee
+  2  where empbdate = ( select min(empbdate) from payroll.employee)
+  3  order by empbdate;
+
+     EMPNO EMPNAME  EMPBDATE 
+---------- -------- ---------
+      7839 KING     17-NOV-69
+
+SQL> --11. For each department, list the department number and name, the number of employees, the
+SQL> --minimum and maximum monthly salary, the total monthly salary and the average salary paid to
+SQL> --their employees. Name the columns: NbrOfEmployees, MinSalary, MaxSalary, TotalSalary,
+SQL> --AvgSalary. Order the output by department number.
+SQL> SELECT
+  2      d.deptname,
+  3      MIN(e.empmsal) AS "min sal",
+  4      MAX(e.empmsal) AS "max empsal",
+  5      AVG(e.empmsal) AS "avg sal",
+  6      COUNT(e.empno) AS "number of emp",
+  7      SUM(e.empmsal) AS "total sal"
+  8  FROM
+  9           payroll.department d
+ 10      left outer JOIN payroll.employee e
+ 11      ON d.deptno = e.deptno
+ 12  GROUP BY
+ 13      d.deptname;
+
+DEPTNAME      min sal max empsal    avg sal number of emp  total sal
+---------- ---------- ---------- ---------- ------------- ----------
+SALES             800       2850 1541.66667             6       9250
+ACCOUNTING       1300       5000 2916.66667             3       8750
+TRAINING          800       3000       2175             5      10875
+HR                                                      0           
+
+SQL> 
+SQL> SELECT
+  2      d.deptno,
+  3      d.deptname,
+  4      COUNT(e.empno)                           "NbrOfEmployees",
+  5      MIN(empmsal)                             "MinSalary",
+  6      MAX(empmsal)                             "MaxSalary",
+  7      SUM(empmsal)                             "TotalSalary",
+  8      to_char(AVG(empmsal), '9999.99')          "AvgSalary"
+  9  FROM
+ 10      payroll.employee      e
+ 11      RIGHT OUTER JOIN payroll.department    d
+ 12      ON ( e.deptno = d.deptno )
+ 13  GROUP BY
+ 14      d.deptno,
+ 15      d.deptname
+ 16  ORDER BY
+ 17      deptno;
+
+    DEPTNO DEPTNAME   NbrOfEmployees  MinSalary  MaxSalary TotalSalary AvgSalar
+---------- ---------- -------------- ---------- ---------- ----------- --------
+        10 ACCOUNTING              3       1300       5000        8750  2916.67
+        20 TRAINING                5        800       3000       10875  2175.00
+        30 SALES                   6        800       2850        9250  1541.67
+        40 HR                      0                                           
+
+SQL> --12. Display the department number, jobs available in that department and the total monthly salary
+SQL> --paid for each job. Order the output by department number and within a department by job.
+SQL> 
+SQL> SELECT
+  2      deptno,
+  3      empjob,
+  4      SUM(empmsal)
+  5  FROM
+  6      payroll.employee
+  7  GROUP BY
+  8      deptno,
+  9      empjob
+ 10  ORDER BY deptno,empjob;
+
+    DEPTNO EMPJOB   SUM(EMPMSAL)
+---------- -------- ------------
+        10 ADMIN            1300
+        10 DIRECTOR         5000
+        10 MANAGER          2450
+        20 MANAGER          2975
+        20 TRAINER          7900
+        30 ADMIN             800
+        30 MANAGER          2850
+        30 SALESREP         5600
+
+8 rows selected. 
+
+SQL> --13. Which employee earns more than the average salary? Show the employee number, name and
+SQL> --monthly salary. Order the output by employee number.
+SQL> SELECT
+  2      *
+  3  FROM
+  4      payroll.employee
+  5  WHERE
+  6      empmsal > (
+  7          SELECT
+  8              AVG(empmsal)
+  9          FROM
+ 10              payroll.employee
+ 11      )
+ 12  order by empno;
+
+     EMPNO EMPNAME  EMPIN EMPJOB   EMPBDATE     EMPMSAL    EMPCOMM     DEPTNO      MGRNO
+---------- -------- ----- -------- --------- ---------- ---------- ---------- ----------
+      7566 JONES    JM    MANAGER  02-APR-84       2975                    20       7839
+      7698 BLAKE    R     MANAGER  01-NOV-80       2850                    30       7839
+      7782 CLARK    AB    MANAGER  09-JUN-82       2450                    10       7839
+      7788 SCOTT    SCJ   TRAINER  26-NOV-76       3000                    20       7566
+      7839 KING     CC    DIRECTOR 17-NOV-69       5000                    10           
+      7902 FORD     MG    TRAINER  13-FEB-76       3000                    20       7566
+
+6 rows selected. 
+
+SQL> --14. Which department has the greatest average monthly salary? Show the department no, name
+SQL> --and average monthly salary. Order the output by department number.
+SQL> 
+SQL> SELECT
+  2      d.deptno,
+  3      d.deptname,
+  4      AVG(empmsal)
+  5  FROM
+  6      payroll.department d
+  7      LEFT OUTER JOIN payroll.employee   e
+  8      ON e.deptno = d.deptno
+  9  Having
+ 10      AVG(empmsal) = (
+ 11          SELECT
+ 12              MAX(AVG(empmsal))
+ 13          FROM
+ 14              payroll.department d
+ 15              LEFT OUTER JOIN payroll.employee   e
+ 16              ON e.deptno = d.deptno
+ 17          GROUP BY
+ 18              d.deptno
+ 19      )
+ 20  GROUP BY
+ 21      d.deptno,
+ 22      d.deptname
+ 23  ORDER BY
+ 24      d.deptno;
+
+    DEPTNO DEPTNAME   AVG(EMPMSAL)
+---------- ---------- ------------
+        10 ACCOUNTING   2916.66667
+
+SQL> --15. Which course has the most offerings? Show the course code, description and number of
+SQL> --offerings. Order the output by the number of offerings in descending order and within the number of
+SQL> --offerings by the course code.
+SQL> SELECT
+  2      c.crscode,
+  3      COUNT(*)
+  4  FROM
+  5      payroll.course   c
+  6      LEFT OUTER JOIN payroll.offering o
+  7      ON c.crscode = o.crscode
+  8  GROUP BY
+  9      c.crscode
+ 10  HAVING
+ 11      COUNT(*) = (
+ 12          SELECT
+ 13              MAX(COUNT(*))
+ 14          FROM
+ 15              payroll.course   c
+ 16              LEFT OUTER JOIN payroll.offering o
+ 17              ON c.crscode = o.crscode
+ 18          GROUP BY
+ 19              c.crscode
+ 20      )
+ 21  ORDER BY
+ 22      COUNT(*) DESC;
+
+CRSCOD   COUNT(*)
+------ ----------
+SQL             3
+
+SQL> 
+SQL> 
+SQL> --16. Display the name, job and date of birth of employees who perform the same job as SCOTT and
+SQL> --were born in the same year. Do not include SCOTT in the output. Order the output by employee
+SQL> --name.
+SQL> SELECT
+  2      e.empjob,
+  3      e.empname,
+  4          to_char(empbdate, 'dd-Mon-yyyy') as birthdate
+  5  FROM
+  6      payroll.employee e
+  7  WHERE
+  8          ( e.empjob,
+  9            EXTRACT(YEAR FROM e.empbdate) ) = (
+ 10              SELECT
+ 11                  e1.empjob,
+ 12                  EXTRACT(YEAR FROM e1.empbdate)
+ 13              FROM
+ 14                  payroll.employee e1
+ 15              WHERE
+ 16                  upper(e1.empname) = 'SCOTT'
+ 17          )
+ 18      AND upper(e.empname) <> 'SCOTT';
+
+EMPJOB   EMPNAME  BIRTHDATE           
+-------- -------- --------------------
+TRAINER  FORD     13-Feb-1976         
+
+SQL> 
+SQL> 
+SQL> SELECT
+  2      e.empname,
+  3      e.empjob,
+  4      to_char(empbdate, 'dd-Mon-yyyy') as birthdate
+  5  FROM
+  6      payroll.employee e
+  7  WHERE
+  8          ( e.empjob,
+  9            EXTRACT(YEAR FROM empbdate) ) = (
+ 10              SELECT
+ 11                  e.empjob,
+ 12                  EXTRACT(YEAR FROM empbdate)
+ 13              FROM
+ 14                  payroll.employee e
+ 15              WHERE
+ 16                  upper(empname) = 'SCOTT'
+ 17          )
+ 18      AND upper(e.empname) <> 'SCOTT'
+ 19  ORDER BY
+ 20      empname;
+
+EMPNAME  EMPJOB   BIRTHDATE           
+-------- -------- --------------------
+FORD     TRAINER  13-Feb-1976         
+
+SQL> 
+SQL> --17. Using the MINUS statement, which employees have never registered in a course. Show their
+SQL> --employee number and name. Order the output by employee number.
+SQL> SELECT
+  2      empno,
+  3      empname
+  4  FROM
+  5      payroll.employee
+  6  MINUS
+  7  
+  8  select distinct e.empno,e.empname  from payroll.employee e join payroll.registration r on e.empno = r.empno;
+
+     EMPNO EMPNAME 
+---------- --------
+      7369 SMITH   
+      7654 MARTIN  
+
+SQL> 
+SQL> 
+SQL> 
+SQL> SPOOL OFF
